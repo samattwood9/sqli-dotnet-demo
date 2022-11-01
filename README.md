@@ -10,6 +10,6 @@
 
 1. Install [SQL Server Developer Edition (2019)](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 2. Download and restore the [AdventureWorks database (2019 LT)](https://learn.microsoft.com/en-us/sql/samples/adventureworks-install-configure?view=sql-server-ver15&tabs=ssms)
-3. Download Visual Studio Code and the .NET Interactive Notebooks extension.
+3. Download [Visual Studio Code](https://code.visualstudio.com/) and the [.NET Interactive Notebooks extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode).
 4. Fork or download this repository.
 5. Open up and run the notebook.
