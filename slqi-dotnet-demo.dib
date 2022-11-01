@@ -1,0 +1,99 @@
+#!markdown
+
+# SQLi
+
+#!markdown
+
+## Understanding SQLi
+
+#!markdown
+
+### Worked example
+
+#!markdown
+
+1. Set-up a mock database.
+
+#!csharp
+
+#r "nuget:Microsoft.DotNet.Interactive.SqlServer,*-*"
+
+#!csharp
+
+#!connect mssql --kernel-name adventureworks "Persist Security Info=False; Integrated Security=true; Initial Catalog=AdventureWorksLT2019; Server=localhost"
+
+#!markdown
+
+2. Run an example of a legitimate query against the database.
+
+#!sql
+
+#!sql-adventureworks
+SELECT * FROM AdventureWorksLT2019.SalesLT.Customer WHERE CustomerID = 4
+
+#!markdown
+
+3. Run the a malcious version of the query, in which a malicious actor has appended `OR 1=1`. Observe how sensitive information (E.g., phone no.) is revealed for other users in a breach of confidentiality.
+
+#!sql
+
+#!sql-adventureworks
+-- note that we use TOP 12 to limit the no. of rows returned, otherwise we'd be able to see the whole table
+SELECT TOP 12 * FROM AdventureWorksLT2019.SalesLT.Customer WHERE CustomerID = 4 OR 1=1
+
+#!markdown
+
+## Reducing risk w/ an ORM
+
+#!markdown
+
+### Worked example
+
+#!markdown
+
+1. Set-up a new kernel, using `--create-dbcontext`, which means will be accessing the database via the dominant ORM for .NET: Entity Framework.
+
+#!csharp
+
+#!connect mssql --create-dbcontext --kernel-name adventureworksEF "Persist Security Info=False; Integrated Security=true; Initial Catalog=AdventureWorksLT2019; Server=localhost"
+
+#!markdown
+
+2. Run an example of a legitimate query against the database. Best practice when using Entity Framework is to use LINQ.
+
+#!csharp
+
+var targetId = 4; // we can imagine this has been input by a user
+adventureworksEF.Customers.SingleOrDefault(c => c.CustomerId == targetId)
+
+#!markdown
+
+3. Run a malicious query against the database. In this case, the malicious query runs successfully due to insecure coding practices.
+
+#!csharp
+
+var targetEmail = "'' OR 1=1";
+var query = $"SELECT * FROM SalesLT.Customer WHERE EmailAddress = " + targetEmail;
+adventureworksEF.Customers.FromSqlRaw<Customer>(query)
+
+#!markdown
+
+4. Construct an equivalent query using LINQ and see how it handles the same malicious input.
+
+#!csharp
+
+adventureworksEF.Customers.Where(c => c.EmailAddress == targetEmail)
+
+#!markdown
+
+5. To understand why the LINQ approach is safer and does not reveal sensitive data belonging to other users, we can compare the query produced via the Entity Framework magic with the query produced via our insecure approach.
+
+#!csharp
+
+// produced via insecure coding practices
+Console.WriteLine(query)
+
+#!csharp
+
+// produced via LINQ / Entity Framework
+adventureworksEF.Customers.Where(c => c.EmailAddress == targetEmail).ToQueryString()
