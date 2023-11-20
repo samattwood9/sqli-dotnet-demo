@@ -13,3 +13,4 @@
 ## Notes
 
 - Currently working with Visual Studio Code Insiders only (1.85.0-insider).
+- The .NET Interative Notebooks extension is now a Polyglot Notebooks extension.
