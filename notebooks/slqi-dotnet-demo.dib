@@ -20,7 +20,7 @@
 
 #!csharp
 
-#!connect mssql --kernel-name adventureworks "Persist Security Info=False; Integrated Security=true; Initial Catalog=AdventureWorksLT2019; Server=localhost"
+#!connect mssql --kernel-name adventureworks "Persist Security Info=False; Integrated Security=true; Encrypt=false; Initial Catalog=AdventureWorksLT2019; Server=localhost"
 
 #!markdown
 
@@ -55,7 +55,7 @@ SELECT TOP 12 * FROM AdventureWorksLT2019.SalesLT.Customer WHERE CustomerID = 4 
 
 #!csharp
 
-#!connect mssql --create-dbcontext --kernel-name adventureworksEF "Persist Security Info=False; Integrated Security=true; Initial Catalog=AdventureWorksLT2019; Server=localhost"
+#!connect mssql --create-dbcontext --kernel-name adventureworksEF "Persist Security Info=False; Integrated Security=true; Encrypt=false; Initial Catalog=AdventureWorksLT2019; Server=localhost"
 
 #!markdown
 
